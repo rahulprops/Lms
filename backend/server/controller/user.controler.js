@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { generateToken } from "../config/jwtToken.js";
 import errorHandler from "../middleware/error_logs/errorHandler.js";
 import userModel from "../models/user.model.js";
@@ -90,8 +91,20 @@ export const userRegister= async (req ,res)=>{
 
  //! get user
  export const getUserProfile= async(req,res)=>{
+    const id=req.id;
+    if(!id){
+        return errorHandler(res,400,"id not found")
+    }
     try{
-        console.log("get ")
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return errorHandler(res,400,"please enter valid id")
+        }
+        // find profile
+        const getUser= await userModel.findById(id).select("-password")
+        if(!getUser){
+            return errorHandler(res,400,"user not found ")
+        }
+       return errorHandler(res,200,"profile found sucess",getUser)
     }catch(err){
         return errorHandler(res,500,`server error ${err.message}`)
     }
