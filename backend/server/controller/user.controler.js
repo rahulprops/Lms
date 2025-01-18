@@ -1,8 +1,10 @@
+import { generateToken } from "../config/jwtToken.js";
 import errorHandler from "../middleware/error_logs/errorHandler.js";
 import userModel from "../models/user.model.js";
 import bcrypt from 'bcrypt'
 import validator from 'validator'
-export const userRegister= async (req , res)=>{
+//! create user 
+export const userRegister= async (req ,res)=>{
     const {name,email,password}=req.body;
     if(!name || !email || !password){
         return errorHandler(res,400,"all fiels requied")
@@ -39,3 +41,37 @@ export const userRegister= async (req , res)=>{
 
     }
 }
+//! login user
+ export const userLogin= async (req,res)=>{
+    const {email,password}=req.body;
+    if(!email || !password){
+        return errorHandler(res,400,"all fiels requied")
+    }
+    // check email valid or not
+    if(!validator.isEmail(email)){
+        return errorHandler(res,400,"please enter valid email")
+    }
+    try{
+        const isMatchEmail= await userModel.findOne({email:email})
+        if(!isMatchEmail){
+            return errorHandler(res,404,"user not found")
+        }
+        // compare password 
+        const isValidPass= await bcrypt.compare(password,isMatchEmail.password)
+        if(!isValidPass){
+            
+          return errorHandler(res,400,"password invalid")
+        }
+      const token=  generateToken(isMatchEmail._id)
+      if(!token){
+        return errorHandler(res,400,"token generate failed")
+      }
+       res.cookie("refreshToken",token,{
+        httpOnly:true,
+        maxAge: 24*60*60*1000
+       })
+        return errorHandler(res,200,"login sucessful",isMatchEmail)
+    }catch(err){
+        return errorHandler(res,500,`server error ${err.message}`)
+    }
+ }

@@ -4,12 +4,14 @@ import  'dotenv/config.js'
 import { dbConnection } from './server/database/dbConnection.js';
 import userRouter from './server/routers/user.route.js';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 const app=express()
 const port=process.env.PORT;
 //! middlewares
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:false}))
+app.use(cookieParser())
 //! api end points
 app.use("/api/v1/user",userRouter)
 //! sever lisen
