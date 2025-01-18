@@ -54,8 +54,8 @@ const Navbar = () => {
               {/* User Details Dropdown */}
               {showUserDetails && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-                  <div className="px-4 py-2 text-gray-800">User Name</div>
-                  <div className="px-4 py-2 text-gray-800">user@example.com</div>
+                  <div className="px-4 py-2 text-gray-800"> edit profile</div>
+                  <div className="px-4 py-2 text-gray-800">my learning</div>
                   <hr className="my-1" />
                   <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">
                     Logout

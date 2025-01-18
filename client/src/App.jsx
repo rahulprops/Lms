@@ -1,22 +1,25 @@
-import { useState } from 'react'
-import Login from './pages/Login'
-import Register from './pages/Registor'
-import Navbar from './components/ui/Navbar'
-import HeroSection from './student/HeroSection'
-
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MainLayout from './Layout/MainLayout';
+import Login from './pages/Login';
+import Register from './pages/Registor';
+import HeroSection from './student/HeroSection';
+import ShowUserSide from './showuserside/ShowUserSide';
 
 function App() {
-  
-
   return (
-    <>
-    
-      <Navbar/>
-      <HeroSection/>
-      <Login/>
-      <Register/>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Main Layout with Navbar */}
+        <Route path="/" element={<MainLayout />}>
+          {/* Nested Routes */}
+          <Route index element={<ShowUserSide />} /> {/* Default Route */}
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
