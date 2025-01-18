@@ -66,11 +66,32 @@ export const userRegister= async (req ,res)=>{
       if(!token){
         return errorHandler(res,400,"token generate failed")
       }
-       res.cookie("refreshToken",token,{
+       res.cookie("token",token,{
         httpOnly:true,
         maxAge: 24*60*60*1000
        })
         return errorHandler(res,200,"login sucessful",isMatchEmail)
+    }catch(err){
+        return errorHandler(res,500,`server error ${err.message}`)
+    }
+ }
+
+ //! logout user
+ export const logout= async (req,res)=>{
+    try{
+        const clarcookie= res.cookie("token","",{ httpOnly:true,maxAge:0})
+        if(clarcookie){
+            return errorHandler(res,200,"logout sucess")
+        }
+    }catch(err){
+        return errorHandler(res,500,`server error ${err.message}`)
+    }
+ }
+
+ //! get user
+ export const getUserProfile= async(req,res)=>{
+    try{
+        console.log("get ")
     }catch(err){
         return errorHandler(res,500,`server error ${err.message}`)
     }
