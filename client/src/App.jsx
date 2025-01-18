@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Login from './pages/Login'
 import Register from './pages/Registor'
+import Navbar from './components/ui/Navbar'
+import HeroSection from './student/HeroSection'
 
 
 function App() {
@@ -8,7 +10,9 @@ function App() {
 
   return (
     <>
-      <div className=' text-3xl'>hello</div>
+    
+      <Navbar/>
+      <HeroSection/>
       <Login/>
       <Register/>
     </>
