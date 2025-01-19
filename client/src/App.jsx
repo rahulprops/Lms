@@ -7,6 +7,12 @@ import HeroSection from './student/HeroSection';
 import ShowUserSide from './showuserside/ShowUserSide';
 import UserProfile from './student/UserProfile';
 import MyLearning from './student/MyLearning'
+import AdminLayout from './Layout/AdminLayout';
+import Dashboard from './admin/Dashboard';
+import RequireAdmin from './admin/RequireAdmin';
+import PageNotFound from './components/PageNotFound';
+// import AdminLayout from './Layout/AdminLayout';
+// import Dashboard from './admin/Dashboard';
 function App() {
   return (
     <Router>
@@ -21,9 +27,16 @@ function App() {
           <Route path="mylearning" element={<MyLearning/>} />
           {/* <Route path='/profile' element{<UserProfile/>} /> */}
         </Route>
+
+        {/* admin Layout nested */}
+        <Route path='/admin' element={<RequireAdmin><AdminLayout/></RequireAdmin>}>
+          <Route index element={<Dashboard/>}/>
+        </Route>
+        {/* pagenotfound pagenotfound */}
+        <Route path='*' element={<PageNotFound/>}/>
       </Routes>
     </Router>
   );
-}
+} 
 
 export default App;
