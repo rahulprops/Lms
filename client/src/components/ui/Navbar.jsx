@@ -118,9 +118,14 @@ const Navbar = () => {
                   </button>
                   {user.user.role === "instructor" && (
                     <>
-                      <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">
-                        dashboard
-                      </button>
+                      <Link to="/admin" className="block w-full">
+                        <button className="flex items-center w-full px-4 py-3 text-left text-white bg-red-500 rounded-md shadow hover:bg-red-600 hover:shadow-md transition duration-300">
+                          <span className="flex items-center justify-center w-6 h-6 mr-3 bg-red-700 text-white font-bold rounded-full">
+                            D
+                          </span>
+                          Dashboard
+                        </button>
+                      </Link>
                     </>
                   )}
                 </div>

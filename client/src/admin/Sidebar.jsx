@@ -7,7 +7,7 @@ const Sidebar = () => {
           <h2 className="text-xl font-bold mb-4">Admin Panel</h2>
           <nav className="space-y-2">
             <Link
-              to="/admin/add-course"
+              to="/admin/addcourse"
               className="block px-4 py-2 rounded hover:bg-gray-700"
             >
               Add Course
