@@ -2,6 +2,7 @@ import errorHandler from "../middleware/error_logs/errorHandler.js"
 import courseModel from "../models/course.model.js";
 import userModel from "../models/user.model.js";
 
+//! createCourse
 export const createCourse= async(req,res)=>{
     const {coursetitle,category}=req.body;
     const id=req.id;
@@ -28,5 +29,18 @@ export const createCourse= async(req,res)=>{
            return errorHandler(res,201,"create course sucess",create)
     }catch(err){
         return errorHandler(res,500,`server error`)
+    }
+}
+//! get Course
+export const getCreatorCourse= async (req,res)=>{
+    const id=req.id
+    try{
+        const courses=await courseModel.find({creator:id})
+        if(!courses){
+            return errorHandler(res,400,"coures not found")
+        }
+        return errorHandler(res,200,"get courese sucess",courses)
+    }catch(err){
+        return errorHandler(res,500,`server error ${err.message}`)
     }
 }
