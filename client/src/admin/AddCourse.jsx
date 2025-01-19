@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateCourseMutation } from '../featuers/api/courseApi';
+import { useNavigate } from 'react-router-dom';
 
 const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState('');
   const [courseCategory, setCourseCategory] = useState('');
+  const navigate=useNavigate()
   const [categories] = useState([
     'Web Development',
     'Data Science',
@@ -30,7 +32,11 @@ const AddCourse = () => {
       console.error('Error adding course:', err);
     }
   };
-
+  useEffect(()=>{
+    if(isSuccess){
+        navigate("/admin/list-course")
+    }
+  },[isSuccess])
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8">

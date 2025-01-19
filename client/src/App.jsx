@@ -12,6 +12,7 @@ import Dashboard from './admin/Dashboard';
 import RequireAdmin from './admin/RequireAdmin';
 import PageNotFound from './components/PageNotFound';
 import AddCourse from './admin/AddCourse';
+import CourseList from './admin/CourseList';
 // import AdminLayout from './Layout/AdminLayout';
 // import Dashboard from './admin/Dashboard';
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path='/admin' element={<RequireAdmin><AdminLayout/></RequireAdmin>}>
           <Route index element={<Dashboard/>}/>
           <Route path='addcourse' element={<AddCourse/>} />
+          <Route path='list-course' element={<CourseList/>} />
         </Route>
         {/* pagenotfound pagenotfound */}
         <Route path='*' element={<PageNotFound/>}/>

@@ -15,7 +15,18 @@ export const courseApi=createApi({
                 method:"POST",
                 body:{coursetitle,category}
             }),
+            invalidatesTags:['refetch-course']
         }),
+        getCourse:builer.query({
+            query:()=>({
+                url:"getcourse",
+                method:"GET"
+            }),
+            transformResponse:(data)=>{
+                return data.data
+            },
+            providesTags:['refetch-course'],
+        })
     }),
 });
-export const {useCreateCourseMutation} =courseApi;
+export const {useCreateCourseMutation,useGetCourseQuery} =courseApi;

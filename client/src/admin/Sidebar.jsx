@@ -13,7 +13,7 @@ const Sidebar = () => {
               Add Course
             </Link>
             <Link
-              to="/admin/list-courses"
+              to="/admin/list-course"
               className="block px-4 py-2 rounded hover:bg-gray-700"
             >
               List Courses
