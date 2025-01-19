@@ -33,7 +33,16 @@ export const authApi=createApi({
             transformResponse:(data)=>{
                 return data.data;
             },
+        }),
+        loadUser:builder.query({
+            query:()=>({
+                url:"user/get-user",
+                method:"GET"
+            }),
+            transformResponse:(data)=>{
+                return data.data
+            }
         })
     })
 })
-export  const {useRegisterUserMutation,useLoginUserMutation}=authApi
+export  const {useRegisterUserMutation,useLoginUserMutation,useLoadUserQuery}=authApi

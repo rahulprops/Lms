@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useLoadUserQuery } from '../featuers/api/authApi';
 
 const UserProfile = () => {
-  const user = {
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    profilePicture: 'https://via.placeholder.com/150', // Placeholder image
-  };
+  const {data,isError,isLoading,isSuccess}
+  =useLoadUserQuery();
+  
+  
 
   const courses = []; // Mock data for courses enrolled by the user
 
@@ -18,6 +18,16 @@ const UserProfile = () => {
   // Function to close the modal
   const closeModal = () => setIsModalOpen(false);
 
+  if (isLoading) {
+    return <div className="text-center py-16">Loading user data...</div>;
+  }
+
+  if (isError) {
+    return <div className="text-center py-16 text-red-500">Failed to load user data. Please try again.</div>;
+  }
+
+  const user = data || { name: '', email: '', profilePicture: '' }; // Default values if `data` is undefined
+  console.log(user.enrolledCourses)
   return (
     <div className="py-16 px-4 bg-gray-100">
       {/* User Profile Section */}
@@ -30,7 +40,7 @@ const UserProfile = () => {
             className="w-24 h-24 rounded-full border"
           />
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">{user.name}</h2>
+            <h2 className="text-3xl font-semibold text-gray-800">{data.name}</h2>
             <p className="text-gray-600">{user.email}</p>
             <p className="text-gray-600">Role: Student</p>
           </div>
@@ -47,7 +57,7 @@ const UserProfile = () => {
         <div>
           <h3 className="text-2xl font-semibold text-gray-800 mb-4">Enrolled Courses</h3>
           
-          {courses.length === 0 ? (
+          {user.enrolledCourses.length === 0 ? (
             <div className="text-center text-gray-500">No courses enrolled</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

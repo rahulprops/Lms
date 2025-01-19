@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Registor';
 import HeroSection from './student/HeroSection';
 import ShowUserSide from './showuserside/ShowUserSide';
+import UserProfile from './student/UserProfile';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
           <Route index element={<ShowUserSide />} /> {/* Default Route */}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="user-profile" element={<UserProfile />} />
+          {/* <Route path='/profile' element{<UserProfile/>} /> */}
         </Route>
       </Routes>
     </Router>
