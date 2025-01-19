@@ -4,6 +4,7 @@ import errorHandler from "../middleware/error_logs/errorHandler.js";
 import userModel from "../models/user.model.js";
 import bcrypt from 'bcrypt'
 import validator from 'validator'
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 //! create user 
 export const userRegister= async (req ,res)=>{
     const {name,email,password}=req.body;
@@ -111,4 +112,36 @@ export const userRegister= async (req ,res)=>{
  }
  
  
- //!
+ //!updateuser Profile
+ export const updateProfile= async (req,res)=>{
+    const id=req.id
+    const {name}=req.body;
+    const profilePhoto=req.file;
+
+    try{
+        const user= await userModel.findById(id)
+        if(!user){
+            return errorHandler(res,400,"user not found")
+        }
+        // extract public id of thd old image from thr url is it exists;
+        if(user.photourl){
+            const publicId=user.photourl.split("/").pop().split(".")[0];
+            deleteMediaFromCloudinary(publicId)
+            console.log(publicId)
+        }
+        // upload new photo
+        const cloudResponse= await uploadMedia(profilePhoto.path)
+        // console.log(cloudResponse)
+        const { secure_url} =cloudResponse
+        // console.log(secure_url)
+        const updateData={name:name,photourl:secure_url}
+        const updateUser= await userModel.findByIdAndUpdate(id,updateData,{new :true})
+        if(updateUser){
+            return errorHandler(res,200,"profile update sucess",updateUser)
+        }else{
+            return errorHandler(res,400,"update failed")
+        }
+    }catch(err){
+        return errorHandler(res,500,`server error${err.message}`)
+    }
+ }
