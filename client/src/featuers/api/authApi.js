@@ -42,7 +42,14 @@ export const authApi=createApi({
             transformResponse:(data)=>{
                 return data.data
             }
+        }),
+        updateUser:builder.mutation({
+            query:(formData)=>({
+                url:"user/update-profile",
+                method:"PUT",
+                body:formData,
+            })
         })
     })
 })
-export  const {useRegisterUserMutation,useLoginUserMutation,useLoadUserQuery}=authApi
+export  const {useRegisterUserMutation,useLoginUserMutation,useLoadUserQuery,useUpdateUserMutation}=authApi

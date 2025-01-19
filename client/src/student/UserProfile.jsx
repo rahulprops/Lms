@@ -1,22 +1,60 @@
-import React, { useState } from 'react';
-import { useLoadUserQuery } from '../featuers/api/authApi';
+import React, { useEffect, useState } from 'react';
+import { useLoadUserQuery, useUpdateUserMutation } from '../featuers/api/authApi';
 
 const UserProfile = () => {
-  const {data,isError,isLoading,isSuccess}
-  =useLoadUserQuery();
-  
-  
+  const { data, isError, isLoading,refetch } = useLoadUserQuery();
+  const [updateUser, { data: updateData, isLoading: updateLoading,isSuccess:updateSucess, isError: updateIsError, error: updateError }] = useUpdateUserMutation();
 
-  const courses = []; // Mock data for courses enrolled by the user
-
-  // State to manage modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState('');
+  const [name, setName] = useState('');
+  
+  const openModal = () => {
+    setName(data?.name || '');
+    setSelectedImage(null); // Reset selected image
+    setPreviewImage(data?.profilePhoto || '');
+    setIsModalOpen(true);
+  };
 
-  // Function to open the modal
-  const openModal = () => setIsModalOpen(true);
-
-  // Function to close the modal
   const closeModal = () => setIsModalOpen(false);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', name);
+
+    if (selectedImage) {
+      formData.append('profilePhoto', selectedImage);
+    }
+
+    try {
+      await updateUser(formData).unwrap();
+      closeModal();
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    if (updateIsError) {
+      alert(updateError?.data?.message || 'An error occurred while updating the profile.');
+    }
+    if(updateSucess){
+      alert("profile added sucess")
+      refetch()
+    }
+  }, [updateIsError, updateError,updateSucess]);
 
   if (isLoading) {
     return <div className="text-center py-16">Loading user data...</div>;
@@ -26,53 +64,29 @@ const UserProfile = () => {
     return <div className="text-center py-16 text-red-500">Failed to load user data. Please try again.</div>;
   }
 
-  const user = data || { name: '', email: '', profilePicture: '' }; // Default values if `data` is undefined
-  console.log(user.enrolledCourses)
+  const user = data || { name: '', email: '', photourl: '' };
+ console.log(user.profilePhoto)
   return (
     <div className="py-16 px-4 bg-gray-100">
       {/* User Profile Section */}
       <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        {/* Profile Info */}
         <div className="flex items-center space-x-4 mb-8">
           <img
-            src={user.profilePicture}
+            src={user.photourl || 'https://via.placeholder.com/150'}
             alt="User Profile"
             className="w-24 h-24 rounded-full border"
           />
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">{data.name}</h2>
+            <h2 className="text-3xl font-semibold text-gray-800">{user.name}</h2>
             <p className="text-gray-600">{user.email}</p>
             <p className="text-gray-600">Role: Student</p>
           </div>
-
           <button
             onClick={openModal}
             className="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
             Edit Profile
           </button>
-        </div>
-
-        {/* Courses Section */}
-        <div>
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Enrolled Courses</h3>
-          
-          {user.enrolledCourses.length === 0 ? (
-            <div className="text-center text-gray-500">No courses enrolled</div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Example Course Card (This would be dynamic in real use) */}
-              {courses.map((course, index) => (
-                <div key={index} className="border rounded-lg p-4 shadow-md bg-white">
-                  <h4 className="text-xl font-semibold text-gray-800">{course.name}</h4>
-                  <p className="text-gray-600">{course.description}</p>
-                  <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                    Continue Learning
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -81,7 +95,7 @@ const UserProfile = () => {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-600 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md max-w-lg w-full">
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">Edit Profile</h3>
-            <form>
+            <form onSubmit={handleSaveChanges}>
               <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Name
@@ -89,21 +103,32 @@ const UserProfile = () => {
                 <input
                   type="text"
                   id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  defaultValue={user.name}
                 />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
+                <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700">
+                  Profile Picture
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  defaultValue={user.email}
+                  type="file"
+                  id="profilePicture"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full px-4 py-2 mt-1 border rounded-md"
                 />
+                {previewImage && (
+                  <div className="mt-4">
+                    <img
+                      src={previewImage}
+                      alt="Selected Profile"
+                      className="w-24 h-24 rounded-full border"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end space-x-4">
@@ -117,8 +142,9 @@ const UserProfile = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  disabled={updateLoading}
                 >
-                  Save Changes
+                  {updateLoading ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
