@@ -6,7 +6,7 @@ import Register from './pages/Registor';
 import HeroSection from './student/HeroSection';
 import ShowUserSide from './showuserside/ShowUserSide';
 import UserProfile from './student/UserProfile';
-
+import MyLearning from './student/MyLearning'
 function App() {
   return (
     <Router>
@@ -18,6 +18,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="user-profile" element={<UserProfile />} />
+          <Route path="mylearning" element={<MyLearning/>} />
           {/* <Route path='/profile' element{<UserProfile/>} /> */}
         </Route>
       </Routes>

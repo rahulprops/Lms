@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import { userLoggedIn } from '../authSlice';
+import { userLoggedIn, userLoggedOut } from '../authSlice';
 const USER_API="http://localhost:9078/api/v1/"
 export const authApi=createApi({
     reducerPath:"authApi",
@@ -24,7 +24,7 @@ export const authApi=createApi({
             async onQueryStarted(arg,{queryFulfilled,dispatch}){
                 try{
                     const result=await queryFulfilled;
-                    dispatch(userLoggedIn({user:result.data.data}))
+                    dispatch(userLoggedIn({user:result.data}))
                 }catch(e){
                     console.log(e)
                 }
@@ -39,6 +39,15 @@ export const authApi=createApi({
                 url:"user/get-user",
                 method:"GET"
             }),
+            async onQueryStarted(arg,{queryFulfilled,dispatch}){
+                try{
+                    const result=await queryFulfilled;
+                    dispatch(userLoggedIn({user:result.data}))
+                }catch(e){
+                    console.log(e)
+                }
+            }
+            ,
             transformResponse:(data)=>{
                 return data.data
             }
@@ -49,7 +58,21 @@ export const authApi=createApi({
                 method:"PUT",
                 body:formData,
             })
+        }),
+        logout:builder.query({
+            query:()=>({
+                url:"user/logout",
+                method:"GET"
+            }),
+            async onQueryStarted(_,{queryFulfilled,dispatch}){
+                try{
+                    dispatch(userLoggedOut())
+                }catch(err){
+                    console.log(err)
+                }
+            }
         })
+
     })
 })
-export  const {useRegisterUserMutation,useLoginUserMutation,useLoadUserQuery,useUpdateUserMutation}=authApi
+export  const {useRegisterUserMutation,useLoginUserMutation,useLoadUserQuery,useUpdateUserMutation,useLazyLogoutQuery}=authApi
