@@ -6,6 +6,7 @@ import userRouter from './server/routers/user.route.js';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import courseRouter from './server/routers/course.route.js';
 const app=express()
 const port=process.env.PORT;
 //! middlewares
@@ -18,6 +19,7 @@ app.use(cors({
 }))
 //! api end points
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/course",courseRouter)
 //! sever lisen
 app.listen(port,()=>{
     console.log(`server is running :http://localhost:${port}`)
