@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCreateCourseMutation } from '../featuers/api/courseApi';
 
 const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState('');
@@ -11,15 +12,22 @@ const AddCourse = () => {
     'Marketing',
   ]);
 
-  const handleSubmit = (e) => {
+  const [createCourse, { data, isLoading, error, isSuccess }] = useCreateCourseMutation();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (courseTitle && courseCategory) {
-      alert(`Course Added: ${courseTitle} - ${courseCategory}`);
-      // Add logic to submit the course data to your backend or state management
+    if (!courseTitle || !courseCategory) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      await createCourse({ coursetitle: courseTitle, category: courseCategory }).unwrap();
+      alert('Course added successfully!');
       setCourseTitle('');
       setCourseCategory('');
-    } else {
-      alert('Please fill in all fields.');
+    } catch (err) {
+      console.error('Error adding course:', err);
     }
   };
 
@@ -27,6 +35,8 @@ const AddCourse = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Add New Course</h2>
+
+        {/* Form */}
         <form onSubmit={handleSubmit}>
           {/* Course Title */}
           <div className="mb-4">
@@ -43,6 +53,7 @@ const AddCourse = () => {
               onChange={(e) => setCourseTitle(e.target.value)}
               placeholder="Enter course title"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+              disabled={isLoading}
             />
           </div>
 
@@ -59,6 +70,7 @@ const AddCourse = () => {
               value={courseCategory}
               onChange={(e) => setCourseCategory(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+              disabled={isLoading}
             >
               <option value="">Select a category</option>
               {categories.map((category, index) => (
@@ -74,11 +86,24 @@ const AddCourse = () => {
             <button
               type="submit"
               className="w-full px-4 py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition duration-300"
+              disabled={isLoading}
             >
-              Add Course
+              {isLoading ? 'Adding Course...' : 'Add Course'}
             </button>
           </div>
         </form>
+
+        {/* Success/Error Messages */}
+        {isSuccess && (
+          <p className="mt-4 text-green-500 font-medium">
+            Course "{data.title}" added successfully!
+          </p>
+        )}
+        {error && (
+          <p className="mt-4 text-red-500 font-medium">
+            Failed to add course: {error.data?.message || error.message}
+          </p>
+        )}
       </div>
     </div>
   );
