@@ -12,6 +12,7 @@ const courseSchema=new Schema({
      description:{
         type:String
      },
+     courseThubnail:{type:String},
      category:{
         type:String,
         required:true
