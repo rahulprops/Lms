@@ -81,3 +81,21 @@ export const editCourse=async (req,res)=>{
         return errorHandler(res,500,`server error ${err.message}`)
     }
 }
+
+//! get course by id
+export const getCourseById=async (req,res)=>{
+    try{
+        const {courseId}=req.params;
+        // validated id 
+        if(!mongoose.Types.ObjectId.isValid(courseId)){
+            return errorHandler(res,400,"please enter valid id")
+        }
+        const getCourse=await courseModel.findById(courseId)
+        if(!getCourse){
+            return errorHandler(res,404,"not found course")
+        }
+        return errorHandler(res,200,"getCourseById sucess",getCourse)
+    }catch(err){
+        return errorHandler(res,500,`server error ${err.message}`)
+    }
+}
