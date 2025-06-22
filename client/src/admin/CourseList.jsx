@@ -38,13 +38,13 @@ const CourseList = () => {
             </thead>
             <tbody>
               {courses.map((course, index) => (
-                <tr key={course.id} className="hover:bg-gray-50">
+                <tr key={course._id} className="hover:bg-gray-50">
                   <td className="border-b px-4 py-2 text-gray-800">{index + 1}</td>
                   <td className="border-b px-4 py-2 text-gray-800">{course.courseTitle}</td>
                   <td className="border-b px-4 py-2 text-gray-800">${course.price || NaN} </td>
                   <td className="border-b px-4 py-2">
-                    <Link to={`/edit-course/${course.id}`}>
-                      <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
+                    <Link to={`/admin/edit-course/${course._id}`}>
+                      <button  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
                         Edit
                       </button>
                     </Link>

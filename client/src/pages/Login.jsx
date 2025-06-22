@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useLoginUserMutation } from '../featuers/api/authApi';
-
+import {useNavigate} from 'react-router-dom'
 const Login = () => {
   const emailRef = useRef(null); // Ref for email input
   const passwordRef = useRef(null); // Ref for password input
+  const navigate=useNavigate()
 
   const [loginUser, { data, error, isLoading, isSuccess, isError }] = useLoginUserMutation();
     console.log(data)
@@ -22,6 +23,7 @@ const Login = () => {
   useEffect(()=>{
          if(isSuccess){
           alert("login sucessful")
+          navigate("/")
          }
          if(isError){
           alert(error.data.message)

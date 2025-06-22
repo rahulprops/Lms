@@ -13,6 +13,7 @@ import RequireAdmin from './admin/RequireAdmin';
 import PageNotFound from './components/PageNotFound';
 import AddCourse from './admin/AddCourse';
 import CourseList from './admin/CourseList';
+import EditCourse from './admin/EditCourse';
 // import AdminLayout from './Layout/AdminLayout';
 // import Dashboard from './admin/Dashboard';
 function App() {
@@ -29,12 +30,13 @@ function App() {
           <Route path="mylearning" element={<MyLearning/>} />
           {/* <Route path='/profile' element{<UserProfile/>} /> */}
         </Route>
-
+        
         {/* admin Layout nested */}
         <Route path='/admin' element={<RequireAdmin><AdminLayout/></RequireAdmin>}>
           <Route index element={<Dashboard/>}/>
           <Route path='addcourse' element={<AddCourse/>} />
           <Route path='list-course' element={<CourseList/>} />
+          <Route path='edit-course/:courseId' element={<EditCourse/>} />
         </Route>
         {/* pagenotfound pagenotfound */}
         <Route path='*' element={<PageNotFound/>}/>
